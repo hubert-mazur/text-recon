@@ -21,10 +21,8 @@ public class Main extends Application {
         //Creating a Scene by passing the group object, height and width
         Scene scene = new Scene(group ,600, 300);
 
-
         //Setting the title to Stage.
         primaryStage.setTitle("Sample Application");
-
         //Adding the scene to Stage
         primaryStage.setScene(scene);
 
