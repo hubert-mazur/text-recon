@@ -22,11 +22,7 @@ public class Img {
     private Histogram grayImageHistogram;
 
 
-    public Img() {
-
-        FileChooser fchooser = new FileChooser();
-        File imgFile = fchooser.showOpenDialog(new Stage());
-//        System.out.println(imgFile.getAbsolutePath());
+    public Img(File imgFile) {
         inputImg = new Image(imgFile.toURI().toString());
         width = (int) inputImg.getWidth(); // be aware of it
         height = (int) inputImg.getHeight();
@@ -41,7 +37,6 @@ public class Img {
     }
 
     private void greyscale() {
-
         double averagePixelValue;
         Color color;
         for (int i = 0; i < width; i++)

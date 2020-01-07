@@ -2,36 +2,32 @@ package main;
 
 import binarize.Img;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 
 public class Main extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        Img im = new Img();
-        //creating a Group object
-        ImageView iv = new ImageView(im.getBinarizedImage());
-
-        Group group = new Group(iv);
-
-        //Creating a Scene by passing the group object, height and width
-        Scene scene = new Scene(group ,600, 300);
+        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
 
         //Setting the title to Stage.
-        primaryStage.setTitle("Sample Application");
+        primaryStage.setTitle("Rozpoznawanie tekstu");
+
         //Adding the scene to Stage
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(root, 900, 650));
 
         //Displaying the contents of the stage
         primaryStage.show();
-
-    }
-    public static void main(String[] args){
-        launch(args);
     }
 }
 
