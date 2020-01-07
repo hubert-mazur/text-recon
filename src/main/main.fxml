@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -35,22 +35,25 @@
                <children>
                   <VBox prefHeight="628.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <CheckBox fx:id="obrazOrygCheckBoxId" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" text="Obraz oryginalny" VBox.vgrow="ALWAYS">
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="obrazSzaryCheckBoxId" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" text="Obraz w odcieniach szarości" VBox.vgrow="ALWAYS">
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="obrazBinarCheckBoxId" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="211.0" text="Obraz zbinaryzowany">
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </CheckBox>
+                        <Button fx:id="originalImageButton" layoutX="30.0" layoutY="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onOriginalImageRequest" prefHeight="26.0" prefWidth="155.0" text="Obraz oryginalny">
+                           <VBox.margin>
+                              <Insets bottom="16.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="grayscaleImageButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onGrayscaleImageRequest" prefHeight="26.0" prefWidth="155.0" text="Obraz w odcieniach szarości" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="16.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="binarizedImageButton" layoutX="30.0" layoutY="66.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="26.0" prefWidth="155.0" text="Obraz zbinaryzowany">
+                           <VBox.margin>
+                              <Insets bottom="16.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
+                     <padding>
+                        <Insets left="20.0" right="20.0" top="30.0" />
+                     </padding>
                   </VBox>
                </children>
             </AnchorPane>
