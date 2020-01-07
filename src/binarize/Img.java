@@ -25,22 +25,23 @@ public class Img {
 //        System.out.println(imgFile.getAbsolutePath());
         inputImg = new Image(imgFile.toURI().toString());
         width = (int) inputImg.getWidth(); // be aware of it
-        height = (int) inputImg.getWidth();
+        height = (int) inputImg.getHeight();
+
+        System.out.println("width: "+ width + " height: " + height); // OK
         binaryImg = new WritableImage(width, height);
         pxReader = inputImg.getPixelReader();
         pxWriter = binaryImg.getPixelWriter();
 
         greyscale();
-        binarizeOtsu();
+//        binarizeOtsu();
     }
 
     private void greyscale() {
 
-
         double averagePixelValue;
         Color color;
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++) {
                 color = pxReader.getColor(i, j);
                 averagePixelValue = ((color.getRed() + color.getGreen() + color.getBlue()) / 3);
                 pxWriter.setColor(i, j, new Color(averagePixelValue, averagePixelValue, averagePixelValue, 1));
