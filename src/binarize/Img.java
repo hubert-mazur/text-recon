@@ -1,12 +1,15 @@
 package binarize;
 
-import javafx.scene.image.*;
+import histogram.Histogram;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class Img {
     private WritableImage binaryImg;
@@ -14,9 +17,10 @@ public class Img {
     private double binarizationConstant;
     private int height;
     private int width;
-    private HashMap<Double, Integer> histogramData;
     private PixelReader pxReader;
     private PixelWriter pxWriter;
+    private Histogram grayImageHistogram;
+
 
     public Img() {
 
@@ -27,13 +31,13 @@ public class Img {
         width = (int) inputImg.getWidth(); // be aware of it
         height = (int) inputImg.getHeight();
 
-        System.out.println("width: "+ width + " height: " + height); // OK
+        System.out.println("width: " + width + " height: " + height); // OK
         binaryImg = new WritableImage(width, height);
         pxReader = inputImg.getPixelReader();
         pxWriter = binaryImg.getPixelWriter();
 
         greyscale();
-//        binarizeOtsu();
+        binarizeOtsu();
     }
 
     private void greyscale() {
@@ -58,22 +62,18 @@ public class Img {
     }
 
     private void binarizeOtsu() {
-        this.histogramData = new HashMap<Double, Integer>(256);
+        this.grayImageHistogram = new Histogram(0.0, 1.0 / 255, 1);
+
         double pixelValue;
-
-        for (double i = 0;i<= 1;i+=1.0/255)
-            histogramData.put(i,0);
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 pixelValue = pxReader.getColor(i, j).getRed();
-                // TODO:: CREATE A CLASS REPRESENTING HISTOGRAM
+                this.grayImageHistogram.insert(pixelValue);
             }
         }
 
+//        this.grayImageHistogram.print();
+
     }
 
-
-
 }
-

@@ -42,8 +42,7 @@ public class Histogram {
         }
     }
 
-
-    Histogram(double beginValue, double step, double endValue) {
+    public Histogram(double beginValue, double step, double endValue) {
 
         this.beginValue = beginValue;
         this.step = step;
@@ -64,6 +63,12 @@ public class Histogram {
         for (var i:bin) {
             if (i.valueInInterval(value))
                 break;
+        }
+    }
+
+    public void print() {
+        for (var i:bin) {
+            System.out.println(i.counts + " in <" + i.begin + ";" + i.end + ")");
         }
     }
 
