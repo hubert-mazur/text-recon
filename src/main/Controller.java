@@ -52,6 +52,6 @@ public class Controller {
             return;
         }
 
-        imageView.setImage(img.getBinarizedImage());
+        imageView.setImage(img.getGrayscaledImage());
     }
 }
