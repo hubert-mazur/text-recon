@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0"
+            prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
       <MenuBar prefHeight="29.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -45,11 +51,45 @@
                               <Insets bottom="16.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="binarizedImageButton" layoutX="30.0" layoutY="66.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="26.0" prefWidth="155.0" text="Obraz zbinaryzowany">
+                         <Button fx:id="binarizedImageButton" layoutX="30.0" layoutY="66.0"
+                                 maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                 onAction="#onBinarizedImageRequest" prefHeight="26.0" prefWidth="155.0"
+                                 text="Obraz zbinaryzowany">
                            <VBox.margin>
                               <Insets bottom="16.0" />
                            </VBox.margin>
-                        </Button>
+                         </Button>
+                         <AnchorPane fx:id="binarizationFactorBox" disable="true" prefHeight="65.0" prefWidth="210.0">
+                             <children>
+                                 <Label layoutX="22.0" layoutY="-3.0" prefHeight="35.0" prefWidth="167.0"
+                                        text="Współczynnik binaryzacji"/>
+                                 <Button fx:id="subtractButton" defaultButton="true" layoutX="44.0" layoutY="38.0"
+                                         maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0"
+                                         mnemonicParsing="false" onAction="#onSubtractPercentRequest" prefHeight="36.0"
+                                         prefWidth="36.0" text="-">
+                                     <font>
+                                         <Font size="16.0"/>
+                                     </font>
+                                 </Button>
+                                 <Text fx:id="percentLabel" layoutX="97.0" layoutY="61.0" strokeType="OUTSIDE"
+                                       strokeWidth="0.0" text="15"/>
+                                 <Button fx:id="addButton" defaultButton="true" layoutX="131.0" layoutY="38.0"
+                                         maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0"
+                                         mnemonicParsing="false" onAction="#onAddPercentButton" prefHeight="36.0"
+                                         prefWidth="36.0" text="+">
+                                     <font>
+                                         <Font size="16.0"/>
+                                     </font>
+                                 </Button>
+                             </children>
+                         </AnchorPane>
+                         <Button fx:id="textReconButton" alignment="CENTER" defaultButton="true" disable="true"
+                                 mnemonicParsing="false" onAction="#onTextReconRequest" prefHeight="26.0"
+                                 prefWidth="223.0" text="Rozpoznaj tekst">
+                             <VBox.margin>
+                                 <Insets top="50.0"/>
+                             </VBox.margin>
+                         </Button>
                      </children>
                      <padding>
                         <Insets left="20.0" right="20.0" top="30.0" />
@@ -57,15 +97,45 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="640.0">
+            <SplitPane dividerPositions="0.725531914893617">
+                <items>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <ImageView fx:id="imageView" fitHeight="620.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                         <ImageView fx:id="imageView" fitHeight="620.0" fitWidth="640.0" pickOnBounds="true"
+                                    preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                             <cursor>
+                                 <Cursor fx:constant="DEFAULT"/>
+                             </cursor>
+                         </ImageView>
                      </children>
                   </AnchorPane>
-               </children>
-            </Pane>
+                    <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="300.0" prefWidth="300.0">
+                        <children>
+                            <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rozpoznany tekst"
+                                          textAlignment="CENTER" wrappingWidth="287.603515625">
+                                        <font>
+                                            <Font name="System Bold" size="14.0"/>
+                                        </font>
+                                    </Text>
+                                    <TextArea fx:id="recognizedTextArea" editable="false" prefHeight="200.0"
+                                              prefWidth="300.0" wrapText="true" VBox.vgrow="ALWAYS">
+                                        <VBox.margin>
+                                            <Insets bottom="20.0"/>
+                                        </VBox.margin>
+                                    </TextArea>
+                                </children>
+                                <padding>
+                                    <Insets left="16.0" right="16.0"/>
+                                </padding>
+                            </VBox>
+                        </children>
+                    </AnchorPane>
+                </items>
+            </SplitPane>
         </items>
       </SplitPane>
    </children>

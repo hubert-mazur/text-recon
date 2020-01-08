@@ -1,13 +1,9 @@
 package main;
 
-import binarize.Img;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 
@@ -16,15 +12,21 @@ public class Main extends Application {
         launch(args);
     }
 
+    static Controller controller;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+        Parent root = loader.load();
 
         //Setting the title to Stage.
         primaryStage.setTitle("Rozpoznawanie tekstu");
 
         //Adding the scene to Stage
-        primaryStage.setScene(new Scene(root, 900, 650));
+        primaryStage.setScene(new Scene(root, 1200, 650));
+
+        controller = loader.getController();
+        controller.setStage(primaryStage);
 
         //Displaying the contents of the stage
         primaryStage.show();

@@ -9,8 +9,8 @@ import javafx.scene.paint.Color;
 import java.io.File;
 
 public class Img {
+    private WritableImage grayscaledImg = null;
     private WritableImage binaryImg;
-    private WritableImage grayscaledImg;
     private Image inputImg;
     private int height;
     private int width;
@@ -27,45 +27,38 @@ public class Img {
         height = (int) inputImg.getHeight();
 
         binaryImg = new WritableImage(width, height);
-        grayscaledImg = new WritableImage(width, height);
         pxInputImgReader = inputImg.getPixelReader();
-        pxGrayImgWriter = grayscaledImg.getPixelWriter();
-        pxGrayImgReader = grayscaledImg.getPixelReader();
         pxBinaryImgWriter = binaryImg.getPixelWriter();
         this.defaultSegmentSize = this.width / 8;
-        greyscale();
-        binarize();
+        percent = 15;
     }
 
-    private void greyscale() {
+    public int getPercent() {
+        return percent;
+    }
+
+    public WritableImage greyscale() {
+        if (this.grayscaledImg == null) {
+            grayscaledImg = new WritableImage(width, height);
+            pxGrayImgWriter = grayscaledImg.getPixelWriter();
+            pxGrayImgReader = grayscaledImg.getPixelReader();
+        }
+
         double averagePixelValue;
         Color color;
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 color = pxInputImgReader.getColor(i, j);
                 averagePixelValue = ((color.getRed() + color.getGreen() + color.getBlue()) / 3);
                 pxGrayImgWriter.setColor(i, j, new Color(averagePixelValue, averagePixelValue, averagePixelValue, 1));
             }
+        }
+
+        return grayscaledImg;
     }
 
     public Image getInputImage() {
         return inputImg;
-    }
-
-    public Image getBinarizedImage() {
-        return binaryImg;
-    }
-
-    public Image getGrayscaledImage() {
-        return grayscaledImg;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
     }
 
     private double grayPixelValue(int x, int y) {
@@ -76,7 +69,10 @@ public class Img {
         this.percent = percent;
     }
 
-    private void binarize() {
+    public WritableImage binarize() {
+        if (this.grayscaledImg == null)
+            greyscale();
+
         double sum;
         double[][] intImg = new double[this.width + 2 * defaultSegmentSize][this.height + 2 * defaultSegmentSize];
         int x1, x2, y1, y2;
@@ -110,5 +106,7 @@ public class Img {
                     pxBinaryImgWriter.setColor(i, j, new Color(1, 1, 1, 1));
             }
         }
+
+        return this.binaryImg;
     }
 }
