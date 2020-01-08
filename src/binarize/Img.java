@@ -1,6 +1,5 @@
 package binarize;
 
-import histogram.Histogram;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -8,8 +7,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class Img {
     private WritableImage binaryImg;
@@ -21,21 +18,21 @@ public class Img {
     private PixelReader pxGrayImgReader;
     private PixelWriter pxGrayImgWriter;
     private PixelWriter pxBinaryImgWriter;
-    private int defaultSegmentSize = 3;
+    private int defaultSegmentSize;
+    private int percent;
 
     public Img(File imgFile) {
         inputImg = new Image(imgFile.toURI().toString());
-        width = (int) inputImg.getWidth(); // be aware of it
+        width = (int) inputImg.getWidth();
         height = (int) inputImg.getHeight();
 
-        System.out.println("width: " + width + " height: " + height); // OK
         binaryImg = new WritableImage(width, height);
         grayscaledImg = new WritableImage(width, height);
         pxInputImgReader = inputImg.getPixelReader();
         pxGrayImgWriter = grayscaledImg.getPixelWriter();
         pxGrayImgReader = grayscaledImg.getPixelReader();
         pxBinaryImgWriter = binaryImg.getPixelWriter();
-
+        this.defaultSegmentSize = this.width / 8;
         greyscale();
         binarize();
     }
@@ -48,7 +45,6 @@ public class Img {
                 color = pxInputImgReader.getColor(i, j);
                 averagePixelValue = ((color.getRed() + color.getGreen() + color.getBlue()) / 3);
                 pxGrayImgWriter.setColor(i, j, new Color(averagePixelValue, averagePixelValue, averagePixelValue, 1));
-//                System.out.println(pxReader.getColor(i, j).getRed());
             }
     }
 
@@ -72,78 +68,47 @@ public class Img {
         return width;
     }
 
-    private void binarize() {
-
-
-        double param;
-        for (int i = 1; i < this.getWidth() - 1; i++) {
-            for (int j = 1; j < this.getHeight() - 1; j++) {
-                adaptiveOtsu(i, j);
-            }
-//            System.out.println("i = " + i);
-        }
+    private double grayPixelValue(int x, int y) {
+        return pxGrayImgReader.getColor(x, y).getRed();
     }
 
-    private void adaptiveOtsu(int x, int y) {
-        Histogram histogram = new Histogram(0.0, 1.0 / 255, 1);
-        ArrayList<Double> classVariances = new ArrayList<Double>();
+    public void setPercent(int percent) {
+        this.percent = percent;
+    }
 
-        for (int i = x - defaultSegmentSize / 2; i < x + defaultSegmentSize / 2; i++)
-            for (int j = y - defaultSegmentSize / 2; j < y + defaultSegmentSize / 2; j++) {
+    private void binarize() {
+        double sum;
+        double[][] intImg = new double[this.width + 2 * defaultSegmentSize][this.height + 2 * defaultSegmentSize];
+        int x1, x2, y1, y2;
+        double count;
+        for (int i = 0; i < this.width + defaultSegmentSize; i++) {
+            sum = 0;
+            for (int j = 0; j < this.height + defaultSegmentSize; j++) {
+                if (i >= this.width || j >= this.height)
+                    sum += grayPixelValue(this.width - 1, this.height - 1);
+                else
+                    sum += grayPixelValue(i, j);
 
-//                x = (i >= this.getWidth() ? this.width - (-i + (x + defaultSegmentSize / 2)) : i);
-//                y = (j >= this.getHeight() ? this.height - (-j + (y + defaultSegmentSize / 2)) : j);
-//
-//                x = (i < 0 ? Math.abs(i) : x);
-//                y = (j < 0 ? Math.abs(j) : y);
-                System.out.println("x = " + x + " y = " + y);
-                histogram.insert(pxGrayImgReader.getColor(i, j).getRed());
+                intImg[i + defaultSegmentSize][j + defaultSegmentSize] = (i == 0 ? sum : intImg[i - 1 + defaultSegmentSize][j + defaultSegmentSize] + sum);
             }
-
-        double bgWeight, bgMean, bgVariance, bgSum;
-        double fgWeight, fgMean, fgVariance, fgSum;
-        double sum = histogram.sum();
-
-        for (int i = 0; i < histogram.getLength(); i++) {
-
-            bgWeight = bgMean = bgVariance = bgSum = 0;
-            fgWeight = fgMean = fgVariance = fgSum = 0;
-
-            for (int b = 0; b < i; b++) {
-                bgWeight += histogram.getCount(b);
-                bgMean += b * bgWeight;
-                bgSum += histogram.getCount(b);
-            }
-
-            bgWeight /= sum;
-            bgMean /= bgSum;
-
-            for (int f = i; f < histogram.getLength(); f++) {
-                fgWeight += histogram.getCount(f);
-                fgMean += f * fgWeight;
-                fgSum += histogram.getCount(f);
-            }
-
-            fgWeight /= sum;
-            fgMean /= fgSum;
-
-            for (int f = i; f < histogram.getLength(); f++)
-                fgVariance += (Math.pow(f - fgMean, 2) * histogram.getCount(f));
-
-            fgVariance /= fgSum;
-
-            classVariances.add(bgWeight * bgVariance + fgWeight * fgVariance);
         }
 
-        int element = classVariances.indexOf(Collections.min(classVariances));
-        double binarizationParam = histogram.getBeginOf(element);
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
 
-//        System.out.println(binarizationParam);
+                x1 = i - defaultSegmentSize / 2;
+                x2 = i + defaultSegmentSize / 2;
+                y1 = j - defaultSegmentSize / 2;
+                y2 = j + defaultSegmentSize / 2;
 
-        if (pxGrayImgReader.getColor(x, y).getRed() < binarizationParam)
-            pxBinaryImgWriter.setColor(x, y, new Color(1, 1, 1, 1));
-        else
-            pxBinaryImgWriter.setColor(x, y, new Color(0, 0, 0, 1));
+                count = (x2 - x1) * (y2 - y1);
+                sum = intImg[x2 + defaultSegmentSize][y2 + defaultSegmentSize] - intImg[x2 + defaultSegmentSize][y1 - 1 + defaultSegmentSize] - intImg[x1 - 1 + defaultSegmentSize][y2 + defaultSegmentSize] + intImg[x1 - 1 + defaultSegmentSize][y1 - 1 + defaultSegmentSize];
 
+                if (grayPixelValue(i, j) * count <= (sum * (100 - percent) / 100.0))
+                    pxBinaryImgWriter.setColor(i, j, new Color(0, 0, 0, 1));
+                else
+                    pxBinaryImgWriter.setColor(i, j, new Color(1, 1, 1, 1));
+            }
+        }
     }
 }
