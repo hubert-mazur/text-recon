@@ -5,8 +5,11 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import letterbox.letterBox;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Img {
     private WritableImage grayscaledImg = null;
@@ -18,6 +21,7 @@ public class Img {
     private PixelReader pxGrayImgReader;
     private PixelWriter pxGrayImgWriter;
     private PixelWriter pxBinaryImgWriter;
+    private ArrayList<WritableImage> readLetters;
     private int defaultSegmentSize;
     private int percent;
 
@@ -31,6 +35,18 @@ public class Img {
         pxBinaryImgWriter = binaryImg.getPixelWriter();
         this.defaultSegmentSize = this.width / 8;
         percent = 15;
+    }
+
+    public Image getInputImage() {
+        return inputImg;
+    }
+
+    private double grayPixelValue(int x, int y) {
+        return pxGrayImgReader.getColor(x, y).getRed();
+    }
+
+    public void setPercent(int percent) {
+        this.percent = percent;
     }
 
     public int getPercent() {
@@ -55,18 +71,6 @@ public class Img {
         }
 
         return grayscaledImg;
-    }
-
-    public Image getInputImage() {
-        return inputImg;
-    }
-
-    private double grayPixelValue(int x, int y) {
-        return pxGrayImgReader.getColor(x, y).getRed();
-    }
-
-    public void setPercent(int percent) {
-        this.percent = percent;
     }
 
     public WritableImage binarize() {
@@ -107,6 +111,52 @@ public class Img {
             }
         }
 
+        this.readLetters = regionProps();
         return this.binaryImg;
     }
+
+    public ArrayList<WritableImage> regionProps() {
+        System.out.println("regionProps started at: " + (new Date()));
+
+        ArrayList<letterBox> letters = new ArrayList<letterBox>();
+        ArrayList<WritableImage> lettersArrayList = new ArrayList<WritableImage>();
+        PixelReader pxBinaryImgReader = this.binaryImg.getPixelReader();
+        boolean isBlack;
+        boolean add;
+
+        letters.add(new letterBox());
+
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                isBlack = (pxBinaryImgReader.getColor(i, j).getRed() == 0);
+                add = true;
+                if (isBlack) {
+                    if (letters.size() == 0) {
+                        letters.add(new letterBox(i, j));
+                    } else {
+                        for (var k : letters) {
+                            if (k.isNeighbour(i, j)) {
+                                break;
+                            } else {
+                                add = false;
+                            }
+                        }
+                        if (!add) {
+                            letters.add(new letterBox(i, j));
+                        }
+                    }
+                }
+            }
+        }
+
+        for (var k : letters) {
+            k.drawRectangle(pxBinaryImgWriter, pxBinaryImgReader, this.width, this.height);
+            lettersArrayList.add(k.getSeparatedLetter());
+        }
+
+        System.out.println("regionProps ended at: " + (new Date()));
+
+        return lettersArrayList;
+    }
 }
+
