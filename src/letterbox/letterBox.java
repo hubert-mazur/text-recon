@@ -30,10 +30,6 @@ public class letterBox {
         }
     }
 
-    public letterBox() {
-        this.letter = new ArrayList<lettersPixel>();
-    }
-
     public letterBox(int i, int j) {
         this.letter = new ArrayList<lettersPixel>();
         this.letter.add(new lettersPixel(i, j));
@@ -44,8 +40,8 @@ public class letterBox {
     }
 
     public boolean isNeighbour(int i, int j) {
-        for (var k : letter) {
-            if (k.getI() - 1 <= i && k.getI() + 1 >= i && k.getJ() - 1 <= j && k.getJ() + 1 >= j) {
+        for (var pixel : letter) {
+            if (pixel.getI() - 2 <= i && pixel.getI() + 2 >= i && pixel.getJ() - 2 <= j && pixel.getJ() + 2 >= j) {
                 this.letter.add(new lettersPixel(i, j));
                 return true;
             }
@@ -62,24 +58,30 @@ public class letterBox {
         int minJ = getMinJ();
         int maxJ = getMaxJ();
 
-        WritableImage img = new WritableImage(maxI - minI + 1, maxJ - minJ + 1);
+        WritableImage img = new WritableImage(maxI - minI + 9, maxJ - minJ + 9);
+
+        for (int i = 0; i < maxI - minI + 9; i++) {
+            for (int j = 0; j < maxJ - minJ + 9; j++) {
+                img.getPixelWriter().setColor(i, j, new Color(1, 1, 1, 1));
+            }
+        }
 
         for (int i = minI; i <= maxI && i < width; i++) {
             for (int j = minJ; j <= maxJ && j < height; j++) {
-                img.getPixelWriter().setColor(i - minI, j - minJ, binImgReader.getColor(i, j));
+                img.getPixelWriter().setColor(i - minI + 4, j - minJ + 4, binImgReader.getColor(i, j));
             }
         }
 
         this.separatedLetter = img;
-        for (int i = minI; i <= maxI && i < width; i++) {
-            px.setColor(i, minJ, new Color(1, 0, 0, 1));
-            px.setColor(i, maxJ, new Color(1, 0, 0, 1));
-        }
-
-        for (int j = minJ; j <= maxJ && j < height; j++) {
-            px.setColor(minI, j, new Color(1, 0, 0, 1));
-            px.setColor(maxI, j, new Color(1, 0, 0, 1));
-        }
+//        for (int i = minI; i <= maxI && i < width; i++) {
+//            px.setColor(i, minJ, new Color(1, 0, 0, 1));
+//            px.setColor(i, maxJ, new Color(1, 0, 0, 1));
+//        }
+//
+//        for (int j = minJ; j <= maxJ && j < height; j++) {
+//            px.setColor(minI, j, new Color(1, 0, 0, 1));
+//            px.setColor(maxI, j, new Color(1, 0, 0, 1));
+//        }
     }
 
     public WritableImage getSeparatedLetter() {
