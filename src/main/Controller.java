@@ -147,9 +147,7 @@ public class Controller {
     }
 
     public void onTextReconRequest(ActionEvent event) {
-        if (img != null) {
-            img.generateSeparatedLetters();
-            this.showProjectInProgress();
-        }
+        showProjectInProgress();
+        img.generateSeparatedLetters();
     }
 }

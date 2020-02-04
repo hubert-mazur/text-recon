@@ -53,7 +53,7 @@
                               <Insets bottom="16.0" />
                            </VBox.margin>
                          </Button>
-                         <AnchorPane fx:id="binarizationFactorBox" disable="true" prefHeight="65.0" prefWidth="210.0">
+                         <AnchorPane fx:id="binarizationFactorBox" disable="true" prefHeight="160.0" prefWidth="223.0">
                              <children>
                                  <Label layoutX="22.0" layoutY="-3.0" prefHeight="35.0" prefWidth="167.0"
                                         text="Współczynnik binaryzacji"/>
@@ -75,15 +75,11 @@
                                          <Font size="16.0"/>
                                      </font>
                                  </Button>
+                                 <Button fx:id="textReconButton" alignment="CENTER" defaultButton="true" layoutX="2.0"
+                                         layoutY="114.0" mnemonicParsing="false" onAction="#onTextReconRequest"
+                                         prefHeight="26.0" prefWidth="210.0" text="Rozpoznaj tekst"/>
                              </children>
                          </AnchorPane>
-                         <Button fx:id="textReconButton" alignment="CENTER" defaultButton="true" disable="true"
-                                 mnemonicParsing="false" onAction="#onTextReconRequest" prefHeight="26.0"
-                                 prefWidth="223.0" text="Rozpoznaj tekst">
-                             <VBox.margin>
-                                 <Insets top="50.0"/>
-                             </VBox.margin>
-                         </Button>
                      </children>
                      <padding>
                         <Insets left="20.0" right="20.0" top="30.0" />
