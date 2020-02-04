@@ -29,7 +29,6 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Pomoc">
             <items>
-                <MenuItem mnemonicParsing="false" onAction="#onShowDocumentation" text="Dokumentacja"/>
                 <MenuItem mnemonicParsing="false" onAction="#onShowAuthors" text="Autorzy"/>
             </items>
           </Menu>

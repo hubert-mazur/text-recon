@@ -160,7 +160,4 @@ public class Controller {
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
     }
-
-    public void onShowDocumentation(ActionEvent event) {
-    }
 }

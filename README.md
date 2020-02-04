@@ -65,7 +65,7 @@ Projekt potrafi:
 
 ![](screenshots/generated_letters.png)
 
-
+Działające przykładowe obrazki znajdują się w folderze `testData/`.
 
 ## Co nie działa?
 Popełniliśmy znaczący błąd gdy uznaliśmy, że Java jest dobrym językiem do tworzenia sieci neuronowych.
@@ -82,4 +82,7 @@ Projekt:
     - konwersja do odcieni szarości oraz binaryzacja
     - oddzielanie i zapis liter do pliku 
 
-Informacje o użytym przez nas algorytmie ze szczegółowym opisiem można znaleźć [w dokumencie](AdaptiveThresholding.pdf)
+Informacje o użytym przez nas algorytmie binaryzacji ze szczegółowym opisiem można znaleźć [w dokumencie](AdaptiveThresholding.pdf).
+Algorytm separacji znaków jest naiwnym algorytmem dzielący obraz szukając pustych przestrzeni między wierszami a następnie
+tę samą logikę stosuje dla liter - szuka horyzontalnie białych przestrzeni między nimi.
+ 
