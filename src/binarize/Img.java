@@ -7,14 +7,13 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-//import letterbox.letterBox;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Img {
     private WritableImage grayscaledImg = null;
@@ -142,15 +141,13 @@ public class Img {
     }
 
     public ArrayList<WritableImage> regionProps() {
-        System.out.println("regionProps started at: " + (new Date()));
-
-        ArrayList<WritableImage> lettersArrayList = new ArrayList<WritableImage>();
+        ArrayList<WritableImage> lettersArrayList = new ArrayList<>();
         ArrayList<Row> rows = new ArrayList<Row>();
         PixelReader pxBinaryImgReader = this.binaryImg.getPixelReader();
         boolean rowHadBlackPixel = false;
-        boolean rowHasBlackPixel = false;
+        boolean rowHasBlackPixel;
         int begin = 0;
-        int end = 0;
+        int end;
 
         for (int j = 0; j < this.height; j++) {
             rowHasBlackPixel = rowHasBlackPixels(j, pxBinaryImgReader);
@@ -172,21 +169,16 @@ public class Img {
             }
         }
 
-        ////
-
         File file;
         int letterCounter = 0;
-        int rowCounter = 0;
 
         try {
+            if (Files.notExists(Paths.get("GeneratedLetters/"))) {
+                new File("GeneratedLetters").mkdirs();
+            }
             for (var row : rows) {
-                file = new File("GeneratedRows/row_" + rowCounter + ".png");
-                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(row.img, null);
-                ImageIO.write(bufferedImage, "png", file);
-                rowCounter++;
-                System.out.println("row.letters.size:" + row.letters.size());
                 for (var letter: row.letters) {
-                    file = new File("GeneratedLetter/letter_" + letterCounter + ".png");
+                    file = new File("GeneratedLetters/letter_" + letterCounter + ".png");
                     BufferedImage bufferedImageLetter = SwingFXUtils.fromFXImage(letter.img, null);
                     ImageIO.write(bufferedImageLetter, "png", file);
                     letterCounter++;
@@ -196,12 +188,6 @@ public class Img {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-        ////
-
-        System.out.println(rows.size());
-
-        System.out.println("regionProps ended at: " + (new Date()));
 
         return lettersArrayList;
     }

@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class Controller {
     private Button addButton;
     @FXML
     private Text percentLabel;
+    @FXML
+    private Button textReconButton;
 
     private Img img;
 
@@ -38,6 +41,8 @@ public class Controller {
 
     public void onFileChooseRequest(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png");
+        fileChooser.getExtensionFilters().add(extFilter);
         File imgFile = fileChooser.showOpenDialog(new Stage());
         img = new Img(imgFile);
         this.onOriginalImageRequest(event);
@@ -63,6 +68,7 @@ public class Controller {
 
         subtractButton.setDisable(true);
         addButton.setDisable(true);
+        textReconButton.setDisable(true);
 
         imageView.setImage(img.getInputImage());
     }
@@ -77,6 +83,7 @@ public class Controller {
 
         subtractButton.setDisable(true);
         addButton.setDisable(true);
+        textReconButton.setDisable(true);
 
         imageView.setImage(img.greyscale());
         stage.getScene().setCursor(Cursor.DEFAULT);
@@ -91,6 +98,7 @@ public class Controller {
         binarizationFactorBox.setDisable(false);
         subtractButton.setDisable(false);
         addButton.setDisable(false);
+        textReconButton.setDisable(false);
 
         stage.getScene().setCursor(Cursor.WAIT);
 
@@ -127,6 +135,32 @@ public class Controller {
         stage.getScene().setCursor(Cursor.DEFAULT);
     }
 
+    private void showProjectInProgress() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Informacja");
+        alert.setHeaderText("Informacja");
+        alert.setContentText("Nie udało nam się zaimplementować sieci neuronowej w Javie. " +
+                "Algorytm poprawnie oddziela litery oraz zapisuje je do folderu GeneratedLetters. " +
+                "Więcej informacji na ten temat znajduje się w dokumentacji.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+    }
+
     public void onTextReconRequest(ActionEvent event) {
+        if (img != null) {
+            img.generateSeparatedLetters();
+            this.showProjectInProgress();
+        }
+    }
+
+    public void onShowAuthors(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Autorzy");
+        alert.setHeaderText("Kacper Kapuściak & Hubert Mazur");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+    }
+
+    public void onShowDocumentation(ActionEvent event) {
     }
 }

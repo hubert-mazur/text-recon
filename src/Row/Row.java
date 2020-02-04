@@ -49,24 +49,21 @@ public class Row {
 
     public void separateLetters() {
         boolean rowHadBlackPixel = false;
-        boolean rowHasBlackPixel = false;
+        boolean rowHasBlackPixel;
         int begin = 0;
-        int end = 0;
+        int end;
 
         for (int j = 0; j < this.width; j++) {
             rowHasBlackPixel = columnHasBlackPixels(j, pxReader);
             if (rowHasBlackPixel && !rowHadBlackPixel) {
                 rowHadBlackPixel = true;
                 begin = j;
-                System.out.println("begin letter: " + begin);
             } else if (!rowHasBlackPixel && rowHadBlackPixel) {
                 end = j;
                 letters.add(new Letter(begin, end, this.height));
                 rowHadBlackPixel = false;
-                System.out.println("end letter: " + end);
             }
         }
-//        System.out.println(letters.size());
     }
 
 }

@@ -27,13 +27,6 @@ public class Letter {
     }
 
     public void createImage(PixelReader px) {
-//        for (int i = 0; i < this.width; i++) {
-//            for (int j = 0; j < this.height; j++) {
-//                this.pxWriter.setColor(i, j, new Color(1, 1, 1, 1));
-//            }
-//        }
-
-
         for (int i = this.begin; i < this.end; i++) {
             for (int j = 0; j < this.height; j++) {
                 this.pxWriter.setColor(i - this.begin, j, px.getColor(i, j));
