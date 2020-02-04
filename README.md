@@ -5,7 +5,11 @@ Celem projektu było stworzenie programu, który po wczytaniu obrazka
 zawierającego tekst wypisał go na ekran.
 
 ## Interfejs
+
+
 ![](screenshots/mainscreen.png)
+
+
 Aby wczytać obraz należy wybrać 
 - Plik -> Wczytaj obraz
 
@@ -19,38 +23,56 @@ wykonaniu binaryzacji na danym obrazie (konwersja do odcieni szarości wykona si
 odblokuje się przycisk `Rozpoznaj tekst`. Rozpoznany tekst powinien ukazać się na prawym panelu.
 
 ## Co jest potrzebne do kompilacji oraz uruchomienia projektu?
-- git (do sklonowania repozytorium - ewentualnie można ściągnąć w formacie zip i wypakować)
-- JDK 11
+- `git` (do sklonowania repozytorium - ewentualnie można ściągnąć w formacie zip i wypakować)
+- `JDK 11`
 
 Aby skompilować i uruchomić projekt wystarczy kolejno wykonać komendy:
 ```bash
 git clone https://github.com/hubert-mazur/text-recon.git
-cd text-recon
-java --module-path=/JavaFX/javafx-sdk
-```
-
-Skompilowany przez nas wczesniej projekt do .jar można uruchomić poprzez:
-```bash
-java --module-path=/JavaFX/javafx-sdk-11.0.2/lib/ --add-modules=javafx.controls, 
+cd text-recon/src/META-INF
+jar cmvf MANIFEST.MF text-recon.jar ../main ../binarize/ ../Row/ ../Letter/ # budujemy archiwum jar
+java --module-path=../../JavaFX/javafx-sdk-11.0.2/lib/ --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.base,javafx.graphics -jar text-recon.jar
 ```
 
 ## Co projekt robi?
 Projekt potrafi:
 - wczytać oraz wyświetlić obrazek
+
+
 ![](screenshots/loaded_picture.png)
+
+
 - konwertować obrazek do odcieni szarości
+
+
 ![](screenshots/grayscale_picture.png)
+
+
 - konwertować binaryzować obrazek
+
+
 ![](screenshots/binarized_picture.png)
+
+
 - wprowadzać korekty we współczynniku binaryzacji
+
+
 ![](screenshots/binarization_factor.png)
-- oddzielać litery oraz zapisywać je do plików `.png` ()
+
+
+- oddzielać litery oraz zapisywać je do plików `.png`
+
+
 ![](screenshots/generated_letters.png)
+
+
 
 ## Co nie działa?
 Popełniliśmy znaczący błąd gdy uznaliśmy, że Java jest dobrym językiem do tworzenia sieci neuronowych.
-Podjeliśmy wszystkie kroki w kierunku nauki nauki sieci neuronowej lecz sama jej implementacja znacząco nas przerosła.
-Projekt nie rozpoznaje liter i nie wypisuje ich na prawy panel.
+Podjeliśmy wszystkie kroki w kierunku nauki sieci neuronowej, lecz sama jej implementacja znacząco nas przerosła.
+Projekt:
+- nie rozpoznaje liter i nie wypisuje ich na prawy panel.
+- nie radzi sobie z krzywym, zniekształconym tekstem (wiersze tekstu muszą być poziome).
 
 ## Wykonane elementy
 - Kacper Kapuściak:
@@ -59,3 +81,5 @@ Projekt nie rozpoznaje liter i nie wypisuje ich na prawy panel.
 - Hubert Mazur:
     - konwersja do odcieni szarości oraz binaryzacja
     - oddzielanie i zapis liter do pliku 
+
+Informacje o użytym przez nas algorytmie ze szczegółowym opisiem można znaleźć [w dokumencie](AdaptiveThresholding.pdf)
