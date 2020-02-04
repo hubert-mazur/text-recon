@@ -152,12 +152,4 @@ public class Controller {
             this.showProjectInProgress();
         }
     }
-
-    public void onShowAuthors(ActionEvent event) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Autorzy");
-        alert.setHeaderText("Kacper Kapuściak & Hubert Mazur");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.showAndWait();
-    }
 }
