@@ -1,5 +1,7 @@
 package binarize;
 
+import Row.Row;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -7,7 +9,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import letterbox.letterBox;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -112,7 +117,25 @@ public class Img {
         }
 
         this.readLetters = regionProps();
+        saveImages();
         return this.binaryImg;
+    }
+
+    private void saveImages() {
+        int i = 0;
+        File file;
+        try {
+            for (var letter : this.readLetters) {
+                i++;
+                file = new File("GeneratedLetters/letter_" + i + ".png");
+                if (letter == null)
+                    continue;
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(letter, null);
+                ImageIO.write(bufferedImage, "png", file);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public ArrayList<WritableImage> regionProps() {
@@ -120,43 +143,75 @@ public class Img {
 
         ArrayList<letterBox> letters = new ArrayList<letterBox>();
         ArrayList<WritableImage> lettersArrayList = new ArrayList<WritableImage>();
+        ArrayList<Row> rows = new ArrayList<Row>();
         PixelReader pxBinaryImgReader = this.binaryImg.getPixelReader();
-        boolean isBlack;
-        boolean add;
+        boolean rowHadBlackPixel = false;
+        boolean rowHasBlackPixel = false;
+        int begin = 0;
+        int end = 0;
 
-        letters.add(new letterBox());
-
-        for (int i = 0; i < this.width; i++) {
-            for (int j = 0; j < this.height; j++) {
-                isBlack = (pxBinaryImgReader.getColor(i, j).getRed() == 0);
-                add = true;
-                if (isBlack) {
-                    if (letters.size() == 0) {
-                        letters.add(new letterBox(i, j));
-                    } else {
-                        for (var k : letters) {
-                            if (k.isNeighbour(i, j)) {
-                                break;
-                            } else {
-                                add = false;
-                            }
-                        }
-                        if (!add) {
-                            letters.add(new letterBox(i, j));
-                        }
-                    }
-                }
+        for (int j = 0; j < this.height; j++) {
+            rowHasBlackPixel = rowHasBlackPixels(j, pxBinaryImgReader);
+            if (rowHasBlackPixel && !rowHadBlackPixel) {
+                rowHadBlackPixel = true;
+                begin = j;
+            } else if (!rowHasBlackPixel && rowHadBlackPixel) {
+                end = j;
+                rows.add(new Row(begin, end, this.width));
+                rowHadBlackPixel = false;
             }
         }
 
-        for (var k : letters) {
-            k.drawRectangle(pxBinaryImgWriter, pxBinaryImgReader, this.width, this.height);
-            lettersArrayList.add(k.getSeparatedLetter());
+        for (var row : rows) {
+            row.createImage(pxBinaryImgReader);
+            row.separateLetters();
+            for (var letter:row.letters) {
+                letter.createImage(row.pxReader);
+            }
         }
+
+        ////
+
+        File file;
+        int letterCounter = 0;
+        int rowCounter = 0;
+
+        try {
+            for (var row : rows) {
+                file = new File("GeneratedRows/row_" + rowCounter + ".png");
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(row.img, null);
+                ImageIO.write(bufferedImage, "png", file);
+                rowCounter++;
+                System.out.println("row.letters.size:" + row.letters.size());
+                for (var letter: row.letters) {
+                    file = new File("GeneratedLetter/letter_" + letterCounter + ".png");
+                    BufferedImage bufferedImageLetter = SwingFXUtils.fromFXImage(letter.img, null);
+                    ImageIO.write(bufferedImageLetter, "png", file);
+                    letterCounter++;
+                }
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
+        ////
+
+        System.out.println(rows.size());
 
         System.out.println("regionProps ended at: " + (new Date()));
 
         return lettersArrayList;
     }
+
+    private boolean rowHasBlackPixels(int currentY, PixelReader px) {
+        for (int i = 0; i < this.width; i++) {
+            if (px.getColor(i, currentY).getRed() == 0)
+                return true;
+        }
+        return false;
+    }
+
 }
 
