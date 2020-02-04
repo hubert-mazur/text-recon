@@ -7,7 +7,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import letterbox.letterBox;
+//import letterbox.letterBox;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -116,9 +116,12 @@ public class Img {
             }
         }
 
+        return this.binaryImg;
+    }
+
+    public void generateSeparatedLetters() {
         this.readLetters = regionProps();
         saveImages();
-        return this.binaryImg;
     }
 
     private void saveImages() {
@@ -141,7 +144,6 @@ public class Img {
     public ArrayList<WritableImage> regionProps() {
         System.out.println("regionProps started at: " + (new Date()));
 
-        ArrayList<letterBox> letters = new ArrayList<letterBox>();
         ArrayList<WritableImage> lettersArrayList = new ArrayList<WritableImage>();
         ArrayList<Row> rows = new ArrayList<Row>();
         PixelReader pxBinaryImgReader = this.binaryImg.getPixelReader();
@@ -194,7 +196,6 @@ public class Img {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
 
         ////
 
