@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Main-Class: name of class containing main.Main
