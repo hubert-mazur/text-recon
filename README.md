@@ -79,7 +79,8 @@ Projekt potrafi:
 
 ![](screenshots/generated_letters.png)
 
-Działające przykładowe obrazki znajdują się w folderze `testData/`.
+Działające przykładowe obrazki znajdują się w folderze `testData/`. Ze względu na sposób odpalania 
+projektu wygenerowane litery pokażą się w folderze `src/META-INF/GeneratedLetters/`
 
 ## Co nie działa?
 Popełniliśmy znaczący błąd gdy uznaliśmy, że Java jest dobrym językiem do tworzenia sieci neuronowych.
