@@ -1,6 +1,5 @@
-package Row;
+package Main;
 
-import Letter.Letter;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;

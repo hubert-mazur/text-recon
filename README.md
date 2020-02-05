@@ -24,14 +24,28 @@ odblokuje się przycisk `Rozpoznaj tekst`. Rozpoznany tekst powinien ukazać si�
 
 ## Co jest potrzebne do kompilacji oraz uruchomienia projektu?
 - `git` (do sklonowania repozytorium - ewentualnie można ściągnąć w formacie zip i wypakować)
-- `JDK 11`
+- `Java w wersji 11` - koniecznie!
 
-Aby skompilować i uruchomić projekt wystarczy kolejno wykonać komendy:
+Aby skompilować i uruchomić projekt należy kolejno wykonać poniższe komendy.
+Sugerujemy kopiować z dokumentu `README.md`, ponieważ nie wstawia on na końcach puste 
+znaki końca linii w przeciwieństwie do pliku `pdf`.
 ```bash
 git clone https://github.com/hubert-mazur/text-recon.git
-cd text-recon/src/META-INF
-jar cmvf MANIFEST.MF text-recon.jar ../main ../binarize/ ../Row/ ../Letter/ # budujemy archiwum jar
-java --module-path=../../JavaFX/javafx-sdk-11.0.2/lib/ --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.base,javafx.graphics -jar text-recon.jar
+```
+```bash
+cd text-recon/src/Main
+```
+```bash
+javac --module-path=../../JavaFX/javafx-sdk-11.0.2/lib/ --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.base,javafx.graphics,javafx.swing Letter.java Row.java Img.java Controller.java Main.java
+```
+```bash
+cd ../META-INF
+```
+```bash
+jar cmvf MANIFEST.MF text-recon.jar ../Main
+```
+```bash
+java --module-path=../../JavaFX/javafx-sdk-11.0.2/lib/ --add-modules=javafx.controls,javafx.fxml,javafx.web,javafx.base,javafx.graphics,javafx.swing -jar text-recon.jar
 ```
 
 ## Co projekt robi?

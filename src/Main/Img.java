@@ -1,6 +1,5 @@
-package binarize;
+package Main;
 
-import Row.Row;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;

@@ -1,4 +1,4 @@
-package Letter;
+package Main;
 
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
